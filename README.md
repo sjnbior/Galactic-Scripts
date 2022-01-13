@@ -14,7 +14,18 @@ If you get stuck or require assistance running any of the scripts, please do not
 
 ## Description
 
-* data-download-scripts
-    * [data-download-scripts](./data-download-scripts/2.2/download_via_signed_urls.sh): A simple shell script to enable multiple simultaneous download of all of the Galactic Data v2.2 data.
-* graph-database-scripts
-    * ...
+## data-download-scripts
+
+### [download_via_signed_urls.sh](./data-download-scripts/2.2/download_via_signed_urls.sh)
+
+A simple shell script to enable multiple simultaneous download of all of the Galactic Data v2.2 data.
+
+## graph-database-scripts
+
+### [processing](./graph-database-scripts/processing)
+
+A Python 3.5+ tool intended to get only the unique entities from the aggregate table in Galactic Data. This is useful in preparation to upload concepts as nodes in a graph database.
+
+### [querying](./graph-database-scripts/querying)
+
+A Python 3.5+ tool intended to return Neo4j query results in [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) or [JGF](https://jsongraphformat.info/). GML can be exported to Cytoscape.

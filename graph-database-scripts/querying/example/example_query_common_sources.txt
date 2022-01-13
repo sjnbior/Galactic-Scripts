@@ -1,0 +1,25 @@
+MATCH (target:Entity)
+WHERE target.id in ["HGNC:9108","HGNC:1833","HGNC:188"]
+CALL apoc.neighbors.tohop(target, "<INTERACTS", 2)
+YIELD node as source
+WHERE source.type in ["complex","chemical","other_gene","resolvable-homolog"] AND source.totalOutdegree<=1500 AND source.totalIndegree<=1500
+
+CALL apoc.algo.allSimplePaths(source, target, 'INTERACTS>', 2)
+YIELD path
+WHERE ALL(r in relationships(path) WHERE r.confidenceScore>=0.5 AND r.totalMentions>=7)
+AND ALL(n in nodes(path) WHERE (n.totalOutdegree<=1500 AND n.totalIndegree<=1500 AND n.type in ["complex","chemical","other_gene","resolvable-homolog"]) OR target.name=n.name OR source.name=n.name)
+AND last(relationships(path)).relationshipType = "increases"
+
+WITH collect(path) as paths
+UNWIND paths as p1
+UNWIND paths as p2
+WITH * WHERE head(nodes(p1)).id = head(nodes(p2)).id AND last(nodes(p1)).id <> last(nodes(p2)).id
+
+WITH apoc.coll.union(collect(p1), collect(p2)) as fpaths
+UNWIND(fpaths) as fpath
+
+UNWIND relationships(fpath) AS r
+RETURN relationships(fpath) as edges, nodes(fpath) as nodes, MIN(r.confidenceScore) AS min_confidence, length(fpath) as length
+ORDER BY length, min_confidence DESC
+SKIP 0
+LIMIT 100;
