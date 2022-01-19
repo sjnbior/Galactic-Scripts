@@ -16,7 +16,11 @@ If you get stuck or require assistance running any of the scripts, please do not
 
 ## data-download-scripts
 
-### [download_via_signed_urls.sh](./data-download-scripts/2.2/download_via_signed_urls.sh)
+### [download_via_signed_urls.sh (2.3)](./data-download-scripts/2.3/download_via_signed_urls.sh)
+
+A simple shell script to enable multiple simultaneous download of all of the Galactic Data v2.3 data.
+
+### [download_via_signed_urls.sh (2.2; deprecated)](./data-download-scripts/2.2/download_via_signed_urls.sh)
 
 A simple shell script to enable multiple simultaneous download of all of the Galactic Data v2.2 data.
 
