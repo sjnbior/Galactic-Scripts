@@ -9,8 +9,10 @@ declare -a urls=(
 
 for URL in "${urls[@]}"
 do
-   FILE=`echo $URL | awk -F 'https://storage.googleapis.com/biorelate_galactic_data/2022_01/|\?' '{print $2}'`
+   YEAR=`echo $URL| cut -d'_' -f 4`
+   MONTH=`echo $URL| cut -d'_' -f 5| cut -d'/' -f 1`
+   PATTERN=`echo 'https://storage.googleapis.com/biorelate_galactic_data_'$YEAR'_'$MONTH'/|\?'`
+   FILE=`echo $URL | awk -F $PATTERN '{print $2}'`
+   echo $FILE
    wget -O $FILE $URL  # &
 done
-
-
