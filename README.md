@@ -33,7 +33,7 @@ A Python 3.5+ tool intended to return Neo4j query results in [GML](https://en.wi
 ## Uploading Galactic Data to Neo4j
 ### Preparing the Data
 
-We need to generate `entities.csv` using `aggregate.csv` and [get_unique_entities.py](./graph-database-scripts/processing/get_unique_entities/get_unique_entities.py).
+We need to generate `entities.csv` using `aggregate.csv` and [get_unique_entities.py](./graph-database-scripts/processing/get_unique_entities.py).
 
 ```bash
 pip3 install -r graph-database-scripts/processing/requirements.txt 
