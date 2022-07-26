@@ -29,3 +29,49 @@ A Python 3.5+ tool intended to get only the unique entities from the aggregate t
 ### [querying](./graph-database-scripts/querying)
 
 A Python 3.5+ tool intended to return Neo4j query results in [GML](https://en.wikipedia.org/wiki/Graph_Modelling_Language) or [JGF](https://jsongraphformat.info/). GML can be exported to Cytoscape.
+
+## Uploading Galactic Data to Neo4j
+### Preparing the Data
+
+We need to generate `entities.csv` using `aggregate.csv` and [get_unique_entities.py](./graph-database-scripts/processing/get_unique_entities.py).
+
+```bash
+pip3 install -r graph-database-scripts/processing/requirements.txt 
+```
+```bash
+cd graph-database-scripts/processing
+```
+```bash
+python3 get_unique_entities.py -i path/to/aggregate.csv -o path/to/entities.csv
+```
+
+We use `aggregate.csv` and `entities.csv` to load the interactions in a graph database. 
+We do this with [LOAD CSV](https://neo4j.com/docs/cypher-manual/current/clauses/load-csv/) in the following Cypher scripts run separately.
+
+### Loading Nodes (Entities)
+```roomsql
+LOAD CSV WITH HEADERS FROM 'file:///entities.csv' AS row
+CREATE (e:Entity {_id:row.id, name:row.name, type:row.type})
+RETURN count(e);
+
+CREATE INDEX FOR (e:Entity) ON (e._id);
+```
+### Loading Edges (Interactions)
+```roomsql
+:auto USING PERIODIC COMMIT
+LOAD CSV WITH HEADERS FROM 'file:///aggregate.csv' AS row
+MATCH (e1:Entity {_id: row.Cause_ID})
+MATCH (e2:Entity {_id: row.Effect_ID})
+CREATE (e1)-[:INTERACTS {
+    _id:toInteger(row.Interaction_ID),
+    confidenceScore:toFloat(row.Confidence_Score),
+    relationshipType:row.Relationship_Type,
+    relationshipProperty:row.Relationship_Property,
+    totalMentions:toInteger(row.Total_Mentions),
+    totalDocuments:toInteger(row.Total_Documents),
+    increasesScore:toInteger(row.Increases_Score),
+    status:row.Status
+}]->(e2);
+
+CREATE INDEX FOR ()-[r:INTERACTS]-() ON (r._id);
+```

@@ -15,5 +15,5 @@ To run the tool, please execute the following from the root directory:
 
 ```
 pip3 install -r requirements.txt
-python3 -m get_unique_entities -h
+python3 get_unique_entities.py -h
 ```
